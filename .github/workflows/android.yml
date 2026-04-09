@@ -3,7 +3,8 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Ubuntu 22.04 zyada stable hai Buildozer ke liye
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -15,15 +16,19 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt update
-          # Yahan libtinfo5 ko badal kar libtinfo6 kar diya gaya hai
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
           pip3 install --upgrade Cython==0.29.33 buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Humne 'yes |' hata diya hai aur log_level badha diya hai
+          # Log level -v (verbose) se humein har step nazar aayega
           buildozer -v android debug
         env:
-          # Yeh line licenses ko auto-accept karegi bina pipe error ke
           APP_ANDROID_ACCEPT_SDK_LICENSE: "True"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mobile-APK
+          path: bin/*.apk
