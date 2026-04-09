@@ -22,11 +22,8 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Licenses auto-accept karne ke liye 'yes |' ka use kiya hai
-          yes | buildozer android debug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Mobile-APK
-          path: bin/*.apk
+          # Humne 'yes |' hata diya hai aur log_level badha diya hai
+          buildozer -v android debug
+        env:
+          # Yeh line licenses ko auto-accept karegi bina pipe error ke
+          APP_ANDROID_ACCEPT_SDK_LICENSE: "True"
