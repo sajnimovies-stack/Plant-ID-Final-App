@@ -1,17 +1,21 @@
-[app]
-title = Plant Identifier
-package.name = plantidapp
-package.domain = org.test
-source.dir = .
-source.include_exts = py,png,jpg,kv,atlas
-version = 0.1
-requirements = python3,kivy,requests,certifi,urllib3
-orientation = portrait
-fullscreen = 0
-android.permissions = CAMERA, INTERNET, WRITE_EXTERNAL_STORAGE
-android.api = 31
-android.minapi = 21
-android.sdk = 31
-android.accept_sdk_license = True
-android.archs = arm64-v8a, armeabi-v7a
-p4a.branch = master
+steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
+          pip3 install --upgrade Cython==0.29.33 buildozer
+
+      - name: Build with Buildozer
+        run: |
+          export PATH=$PATH:$HOME/.local/bin
+          buildozer -v android debug
+        env:
+          APP_ANDROID_ACCEPT_SDK_LICENSE: "True"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mobile-APK
+          path: bin/*.apk
