@@ -22,15 +22,18 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
-          # Naye Buildozer ke liye Cython ka version boht aham hai
           pip install --upgrade pip
           pip install Cython==0.29.33 buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Purani cache saaf karne ke liye
-          buildozer android clean
           buildozer -v android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "True"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mobile-APK
+          path: bin/*.apk
