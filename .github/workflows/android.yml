@@ -3,32 +3,34 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    # Ubuntu 22.04 zyada stable hai Buildozer ke liye
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install System Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
-          pip3 install --upgrade Cython==0.29.33 buildozer
+          sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
+          # Naye Buildozer ke liye Cython ka version boht aham hai
+          pip install --upgrade pip
+          pip install Cython==0.29.33 buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Log level -v (verbose) se humein har step nazar aayega
+          # Purani cache saaf karne ke liye
+          buildozer android clean
           buildozer -v android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "True"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Mobile-APK
-          path: bin/*.apk
