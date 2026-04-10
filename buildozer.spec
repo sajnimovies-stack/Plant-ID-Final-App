@@ -11,8 +11,13 @@ fullscreen = 0
 android.permissions = CAMERA, INTERNET
 android.api = 33
 android.minapi = 21
-# Isay khali chor dein
+
+# In lines ko ya toh khali chor dein ya delete kar dein
 android.sdk = 
+android.ndk = 
+
 android.accept_sdk_license = True
 android.archs = arm64-v8a
-p4a.branch =
+
+# IS LINE KO DELETE KAR DEIN YA AISE LIKHEIN:
+p4a.branch = master
