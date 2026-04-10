@@ -15,4 +15,4 @@ android.minapi = 21
 android.sdk = 
 android.accept_sdk_license = True
 android.archs = arm64-v8a
-p4a.branch = master
+p4a.branch =
