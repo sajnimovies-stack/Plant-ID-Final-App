@@ -28,7 +28,7 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Force accept licenses before building
+          # Licenses accept karne ka professional tareeqa
           yes | buildozer android p4a --accept-sdk-license || true
           buildozer -v android debug
         env:
