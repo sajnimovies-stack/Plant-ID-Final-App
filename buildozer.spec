@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 1.0
 
 # Requirements
-requirements = python3, kivy==2.3.0, kivymd==1.1.1, camera4kivy, gestures4kivy, requests, certifi, pillow
+requirements = python3, kivy==2.3.0, kivymd==1.1.1, android, pyjnius
 
 orientation = portrait
 fullscreen = 0
