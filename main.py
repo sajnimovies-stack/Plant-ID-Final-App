@@ -1,63 +1,46 @@
-from kivymd.app import MDApp
-from kivymd.uix.screen import MDScreen
-from kivymd.uix.button import MDRaisedButton, MDFloatingActionButton
-from kivymd.uix.toolbar import MDTopAppBar
-from kivy.lang import Builder
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.image import Image
+from kivy.core.window import Window
 
-# Graphics aur Design ka code (KV Language)
-KV = '''
-MDScreen:
-    md_bg_color: 0.95, 0.95, 0.95, 1
-
-    MDTopAppBar:
-        title: "Plant Identifier AI"
-        elevation: 4
-        pos_hint: {"top": 1}
-        md_bg_color: 0, 0.4, 0.2, 1  # Dark Green Theme
-        specific_text_color: 1, 1, 1, 1
-
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_y: None
-        height: self.minimum_height
-        spacing: "20dp"
-        padding: "20dp"
-        pos_hint: {"center_x": .5, "center_y": .5}
-
-        MDLabel:
-            text: "Pauday ki tasveer upload karein"
-            halign: "center"
-            font_style: "H5"
-            theme_text_color: "Secondary"
-
-        MDIconButton:
-            icon: "leaf"
-            icon_size: "100sp"
-            theme_icon_color: "Custom"
-            icon_color: 0, 0.5, 0.2, 1
-            pos_hint: {"center_x": .5}
-
-        MDRaisedButton:
-            text: "TASVEER KHENCHEIN"
-            md_bg_color: 0, 0.5, 0.2, 1
-            size_hint_x: 0.8
-            pos_hint: {"center_x": .5}
-            on_release: app.identify_plant()
-
-        MDLabel:
-            id: result_label
-            text: "Result yahan nazar aayega"
-            halign: "center"
-            theme_text_color: "Primary"
-'''
-
-class PlantApp(MDApp):
+class PlantIDApp(App):
     def build(self):
-        self.theme_cls.primary_palette = "Green"
-        return Builder.load_string(KV)
+        # Background color white
+        Window.clearcolor = (0.95, 0.95, 0.95, 1)
+        
+        layout = BoxLayout(orientation='vertical', padding=30, spacing=20)
+        
+        # Logo ya Icon
+        self.img = Image(source='logo.png', size_hint=(1, 0.4)) # Agar logo nahi hai to ye khali rahega
+        
+        self.label = Label(
+            text="Plant Identifier AI", 
+            font_size='24sp', 
+            color=(0, 0.4, 0.2, 1),
+            bold=True,
+            size_hint=(1, 0.2)
+        )
+        
+        btn = Button(
+            text="Identify Plant",
+            size_hint=(1, 0.2),
+            background_color=(0, 0.5, 0.3, 1),
+            color=(1, 1, 1, 1),
+            font_size='20sp',
+            background_normal=''
+        )
+        btn.bind(on_release=self.on_click)
+        
+        layout.add_widget(self.img)
+        layout.add_widget(self.label)
+        layout.add_widget(btn)
+        
+        return layout
 
-    def identify_plant(self):
-        self.root.ids.result_label.text = "AI Tashkees kar raha hai..."
+    def on_click(self, instance):
+        self.label.text = "Processing..."
 
 if __name__ == "__main__":
-    PlantApp().run()
+    PlantIDApp().run()
