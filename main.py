@@ -4,81 +4,65 @@ from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.clock import Clock
 
-# UI Design
 KV = '''
 MDScreen:
     md_bg_color: 0.95, 0.95, 0.95, 1
     MDBoxLayout:
         orientation: 'vertical'
         MDTopAppBar:
-            title: "Plant Identifier Pro"
+            title: "Plant Identifier Fix"
+            md_bg_color: 0.1, 0.5, 0.3, 1
             elevation: 4
-            md_bg_color: 0, 0.4, 0.2, 1
-            specific_text_color: 1, 1, 1, 1
         
         MDBoxLayout:
             orientation: 'vertical'
-            padding: "20dp"
-            spacing: "30dp"
+            padding: "30dp"
+            spacing: "20dp"
 
             MDCard:
-                size_hint: (1, 0.6)
-                radius: [25, ]
+                size_hint: (1, 0.5)
+                radius: [20, ]
                 elevation: 2
-                md_bg_color: 1, 1, 1, 1
                 MDBoxLayout:
-                    orientation: 'vertical'
-                    padding: "20dp"
-                    spacing: "10dp"
-                    MDIconButton:
-                        icon: "camera-iris"
-                        icon_size: "120sp"
-                        pos_hint: {"center_x": .5}
-                        theme_icon_color: "Custom"
-                        icon_color: 0, 0.4, 0.2, 1
+                    padding: "15dp"
                     MDLabel:
                         id: status_label
-                        text: "Tap the button below to open camera"
+                        text: "Hardware issues detected. Use the button below to pick 'Camera' from system menu."
                         halign: "center"
                         theme_text_color: "Secondary"
-                        font_style: "Button"
 
-            MDFloatingActionButton:
-                icon: "camera"
-                icon_size: "30sp"
-                md_bg_color: 0, 0.4, 0.2, 1
+            MDRaisedButton:
+                text: "START CAMERA / PICK IMAGE"
                 pos_hint: {"center_x": .5}
-                on_release: app.open_native_camera()
+                size_hint_x: 0.8
+                md_bg_color: 0.1, 0.5, 0.3, 1
+                on_release: app.open_universal_picker()
 '''
 
 class PlantApp(MDApp):
     def build(self):
-        self.theme_cls.primary_palette = "Green"
         return Builder.load_string(KV)
 
-    def open_native_camera(self):
+    def open_universal_picker(self):
         if platform == 'android':
             try:
                 from android import activity
                 from jnius import autoclass
                 
-                # Android's built-in camera call
                 Intent = autoclass('android.content.Intent')
-                MediaStore = autoclass('android.provider.MediaStore')
+                # Yeh line system ko image choose karne ka kehti hai
+                intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.setType("image/*")
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
                 
-                intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                activity.bind(on_activity_result=self.on_camera_result)
-                activity.startActivityForResult(intent, 0x123)
+                # Chooser dikhana taake user camera ya gallery select kare
+                chooser = Intent.createChooser(intent, "Select Source")
+                activity.startActivityForResult(chooser, 100)
+                self.root.ids.status_label.text = "System menu opened..."
             except Exception as e:
-                self.root.ids.status_label.text = f"System Error: {str(e)}"
+                self.root.ids.status_label.text = "System error. Try settings."
         else:
-            self.root.ids.status_label.text = "This only works on a real Android phone!"
-
-    def on_camera_result(self, request_code, result_code, intent):
-        if request_code == 0x123:
-            # Jab user photo khich kar OK kar de
-            self.root.ids.status_label.text = "Photo Captured! Ready to Scan Plant."
-            # Note: Screen par image dikhane ka code yahan add hota hai
+            self.root.ids.status_label.text = "Android only feature."
 
 if __name__ == "__main__":
     PlantApp().run()
