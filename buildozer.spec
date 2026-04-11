@@ -12,12 +12,10 @@ android.permissions = CAMERA, INTERNET
 android.api = 33
 android.minapi = 21
 
-# In lines ko ya toh khali chor dein ya delete kar dein
-android.sdk = 
-android.ndk = 
-
+# NDK version ko lazmi specify karein taake crash na ho
+android.ndk = 25b
 android.accept_sdk_license = True
 android.archs = arm64-v8a
 
-# IS LINE KO DELETE KAR DEIN YA AISE LIKHEIN:
+# Is line ko master par hi rehne dein ya delete kar dein
 p4a.branch = master
