@@ -28,8 +28,9 @@ jobs:
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:$HOME/.local/bin
-          # Forcefully NDK and licenses setup
-          yes | buildozer -v android debug
+          # Force accept licenses before building
+          yes | buildozer android p4a --accept-sdk-license || true
+          buildozer -v android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "True"
           APP_ANDROID_NDK_VERSION: "25b"
