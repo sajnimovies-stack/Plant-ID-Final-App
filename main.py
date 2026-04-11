@@ -1,46 +1,77 @@
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.image import Image
-from kivy.core.window import Window
+from kivymd.app import MDApp
+from kivymd.uix.screen import MDScreen
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDFloatingActionButton
+from kivymd.uix.toolbar import MDTopAppBar
+from kivymd.uix.label import MDLabel
+from kivy.lang import Builder
+from kivy.utils import platform
 
-class PlantIDApp(App):
+# Naye Android versions ke liye permission mangna
+if platform == 'android':
+    from android.permissions import request_permissions, Permission
+    request_permissions([Permission.CAMERA, Permission.WRITE_EXTERNAL_STORAGE])
+
+KV = '''
+MDScreen:
+    md_bg_color: 0.9, 0.9, 0.9, 1
+
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Plant Identifier AI"
+            elevation: 2
+            md_bg_color: 0.1, 0.5, 0.2, 1
+            specific_text_color: 1, 1, 1, 1
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "10dp"
+            spacing: "10dp"
+
+            # Camera View Area (Black Box placeholder for camera)
+            MDCard:
+                size_hint: (1, 0.6)
+                radius: [20, ]
+                md_bg_color: 0, 0, 0, 1
+                elevation: 3
+                
+                MDLabel:
+                    text: "Camera Preview"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 0.5
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_y: 0.4
+                padding: "20dp"
+                spacing: "20dp"
+
+                MDLabel:
+                    id: result_label
+                    text: "Identify any plant instantly!"
+                    halign: "center"
+                    font_style: "H6"
+                    theme_text_color: "Primary"
+
+                MDFloatingActionButton:
+                    icon: "camera"
+                    icon_size: "35sp"
+                    md_bg_color: 0.1, 0.5, 0.2, 1
+                    pos_hint: {"center_x": .5}
+                    on_release: app.identify_now()
+'''
+
+class PlantApp(MDApp):
     def build(self):
-        # Background color white
-        Window.clearcolor = (0.95, 0.95, 0.95, 1)
-        
-        layout = BoxLayout(orientation='vertical', padding=30, spacing=20)
-        
-        # Logo ya Icon
-        self.img = Image(source='logo.png', size_hint=(1, 0.4)) # Agar logo nahi hai to ye khali rahega
-        
-        self.label = Label(
-            text="Plant Identifier AI", 
-            font_size='24sp', 
-            color=(0, 0.4, 0.2, 1),
-            bold=True,
-            size_hint=(1, 0.2)
-        )
-        
-        btn = Button(
-            text="Identify Plant",
-            size_hint=(1, 0.2),
-            background_color=(0, 0.5, 0.3, 1),
-            color=(1, 1, 1, 1),
-            font_size='20sp',
-            background_normal=''
-        )
-        btn.bind(on_release=self.on_click)
-        
-        layout.add_widget(self.img)
-        layout.add_widget(self.label)
-        layout.add_widget(btn)
-        
-        return layout
+        self.theme_cls.primary_palette = "Green"
+        return Builder.load_string(KV)
 
-    def on_click(self, instance):
-        self.label.text = "Processing..."
+    def identify_now(self):
+        self.root.ids.result_label.text = "AI is scanning..."
+        # Yahan aap apna identification logic add kar sakte hain
 
 if __name__ == "__main__":
-    PlantIDApp().run()
+    PlantApp().run()
