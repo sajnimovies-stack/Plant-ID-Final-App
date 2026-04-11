@@ -6,7 +6,7 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
 version = 1.0
 
-# Requirements (Pixel 6 stable version)
+# Requirements
 requirements = python3, kivy==2.3.0, kivymd==1.1.1, camera4kivy, gestures4kivy, requests, certifi, pillow
 
 orientation = portrait
@@ -24,8 +24,8 @@ android.accept_sdk_license = True
 # Permissions
 android.permissions = CAMERA, INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
 
-# Naye phones ke liye zaroori meta-data
-android.meta_data = androidx.core.content.FileProvider
+# Android Specific Fixes
+android.meta_data = androidx.core.content.FileProvider=org.test.plantscanner.fileprovider
 
 # Build settings
 p4a.branch = master
